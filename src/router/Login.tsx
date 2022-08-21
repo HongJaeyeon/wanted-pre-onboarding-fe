@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -34,7 +34,6 @@ const LoginBtn = styled.button<{active: boolean}>`
     width: 77px;
     height: 24px;
     margin-right: 10px;
-
 `;
 
 const JoinBtn = styled.button`
@@ -51,6 +50,11 @@ const JoinBtn = styled.button`
 
 export default function Login(){
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        const loggedin = localStorage.getItem('access_token');
+        loggedin && navigate('/todo')
+    }, []);
 
     const tokenSave = (jwt:string) => {
         localStorage.setItem('access_token', jwt);
@@ -81,20 +85,13 @@ export default function Login(){
     }
     const validation = () => {
         email.indexOf('@') > 0 && pw.length > 8 ? setActive(true) : setActive(false);
-        console.log(active);
     }
-
-    // useEffect({
-    //     const access_token = localStorage.getItem("access_token"),
-    //     access_token? Redirect(todo) : null;
-    // },[])
-        
 
     return(
         <Container>
             <LoginForm>
                 <LoginInput onChange={(e:React.ChangeEvent<HTMLInputElement>) => {setEmail(e.target.value); validation()}} placeholder="이메일"></LoginInput>
-                <LoginInput onChange={(e:React.ChangeEvent<HTMLInputElement>) => {setPW(e.target.value); validation();}} placeholder="비밀번호"></LoginInput>
+                <LoginInput onChange={(e:React.ChangeEvent<HTMLInputElement>) => {setPW(e.target.value); validation()}} placeholder="비밀번호"></LoginInput>
                 <LoginBtn active={active} onClick={handleSubmit}>로그인</LoginBtn>
                 <Link to='/join'><JoinBtn>회원가입</JoinBtn></Link>
             </LoginForm> 

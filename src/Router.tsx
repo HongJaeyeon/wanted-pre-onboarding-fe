@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from "react";
 import Join from "./router/Join";
 import Login from "./router/Login";

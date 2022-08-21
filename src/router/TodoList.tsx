@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import TodoA from "../components/Todo";
+import Todo from "../components/Todo";
 
 const Container = styled.div`
     display: flex;
@@ -20,7 +20,7 @@ const TodoInput = styled.input`
     margin-top: 20vh;
     margin-bottom: 7px;
     font-size: 9px;
-    width: 150px;
+    width: 200px;
     padding: 7px;
     border-radius: 7px;
 `;
@@ -28,14 +28,6 @@ const TodoInput = styled.input`
 const Todos = styled.ul`
 
 `;
-
-const Todo = styled.li`
-    font-size: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
 
 export default function TodoList() {
     interface Itodo {
@@ -89,7 +81,7 @@ export default function TodoList() {
                 <TodoInput onChange={(e:React.ChangeEvent<HTMLInputElement>) => setTodo(e.target.value)} value={todo} placeholder="TODO"/>
             </TodoForm>
             <Todos>
-                {todos?.map( todo => <TodoA key={todo.id} jwt={jwt} id={todo.id} todo={todo.todo} isCompleted={true}></TodoA> )}
+                {todos?.map( todo => <Todo key={todo.id} jwt={jwt} id={todo.id} todo={todo.todo} isCompleted={todo.isCompleted}></Todo> )}
             </Todos>
         </Container>
     )

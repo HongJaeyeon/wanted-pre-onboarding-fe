@@ -6,21 +6,28 @@ const CheckBox = styled.input.attrs({ type: 'checkbox' })`
     width: 7px;
 `;
 
-const EditInput = styled.input`
-    display: block;
-    border: none;
-    font-size: 9px;
+const Div = styled.span`
+    display: inline-block;
     width: 150px;
-    padding: 7px;
-    border-radius: 7px;
+`;
+
+const Form = styled.form`
+    display: inline;  
+`;
+
+const EditInput = styled.input`
+    display: inline;
+    border: none;
+    font-size: 15px;
+    width: 150px;
+    ::placeholder{
+        color: black;
+    }
 `;
 
 const Btn = styled.button`
-    margin-left: 8px;
-`;
-
-const ID = styled.span`
-    display: none;
+    margin-left: 3px;
+    font-size: 8px;
 `;
 
 interface Itodo{
@@ -32,20 +39,20 @@ interface Itodo{
 
 export default function Todo({jwt, id, isCompleted, todo}: Itodo){
     const [editTodo, setEditTodo] = useState("");
+    const [editIsCompleted, setEditIsCompleted] = useState(isCompleted);
     const [active, setActive] = useState(false);
 
     const handleEdit = () => {
         fetch(`${process.env.REACT_APP_BASE_URL}/todos/${id}`, {
             method: "PUT",
-
             headers: {
                 'Authorization' : `Bearer ${jwt}`,
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': "*",
             },
             body: JSON.stringify({
-                todo: editTodo,
-                isCompleted: isCompleted,
+                todo: editTodo? editTodo : todo,
+                isCompleted: editIsCompleted? editIsCompleted : isCompleted,
             }),
         })
     }
@@ -60,6 +67,11 @@ export default function Todo({jwt, id, isCompleted, todo}: Itodo){
         })
     }
 
+    const handleCheck = () => {
+        setEditIsCompleted(current=> !current);
+        handleEdit();
+    }
+
     const buttonClcik = () => {
         active ? handleEdit() : null;
         setActive(current => !current);
@@ -67,8 +79,8 @@ export default function Todo({jwt, id, isCompleted, todo}: Itodo){
 
     return(
         <div>
-            <CheckBox/>
-            { !active ? todo : <form onClick={handleEdit}> <EditInput onChange={(e:React.ChangeEvent<HTMLInputElement>) => setEditTodo(e.target.value) } value={editTodo}/></form> }
+            <CheckBox onChange={handleCheck} checked={editIsCompleted}/>
+            { !active ? <Div>{todo}</Div> : <Form onClick={handleEdit}> <EditInput onChange={(e:React.ChangeEvent<HTMLInputElement>) => setEditTodo(e.target.value)} placeholder={todo} value={editTodo}/></Form> }
             <Btn onClick={buttonClcik}>수정</Btn>
             <Btn onClick={handleRemove}>삭제</Btn>
         </div>
